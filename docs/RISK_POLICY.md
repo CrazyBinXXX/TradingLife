@@ -49,16 +49,19 @@ $$
   - $\beta_{i,SPY}$：用 60–90 日收益回归估计。  
 
 - **阈值**：  
-  - 单标的 $|G^{(SPY\$)}_i|$ ≤ **0.3**  
-  - 全组合 $|G^{(SPY\$)}_{portfolio}|$ ≤ **0.5**  
+  - 单标的：\( \left\lvert G^{(\$SPY)}_{i} \right\rvert \le 0.3 \)
+  - 全组合：\( \left\lvert G^{(\$SPY)}_{\text{portfolio}} \right\rvert \le 0.5 \)
 
 ### Theta
 - 组合总 Theta ≤ **1% NAV/日**。  
 - 单一标的 Theta ≤ **0.3% NAV/日**。  
 
 ### Vega
-- 组合 Vega：当 IV 变动 +1% 时，NAV 的敏感度 ≤ **2% NAV**。  
-- 单一标的 Vega ≤ **1% NAV**。  
+- 定义：当标的 IV 上升 1% 时，组合 PnL 的敏感度（美元）。
+- 风控规则：
+  - **单标的 Vega** ≤ 1% NAV
+  - **全组合 Vega** ≤ 2% NAV
+- 未来版本将升级为 **Vol-adjusted Vega**，即以标的的 vol-of-vol 校正，使不同标的 Vega 可比。
 
 ---
 
@@ -96,3 +99,13 @@ $$
 - **合成 Delta (AAPL)** = 100 + 50 = **150**  
   - 折算成 NAV 比例：150 × \$200 / \$100,000 = **30% NAV**  
   - 超
+
+### 回撤定义
+- **主口径**：组合回撤 (Drawdown) 定义为相对于 NAV 历史最高点的跌幅：
+  $$
+  DD = \frac{CurrentNAV - MaxHistoricalNAV}{MaxHistoricalNAV}
+  $$
+- **补充口径**：同时监控过去 90 天的滚动最大回撤，用于辅助判断是否需要提前降级或收缩仓位。
+- **风险阈值**：
+  - 单标的最大回撤 ≤ 10% NAV → 触发清仓该标的。
+  - 组合最大回撤 ≤ 15% NAV → 触发全面降级或停机。
